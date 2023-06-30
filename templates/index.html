@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" type="text/css" href="/static/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/nav_footer.css"> -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nav_footer.css') }}">
+    <title>台北一日遊</title>
+</head>
+<body>
+    <div id="signInSignUp">
+        <nav>
+            <div class="nav">
+                <a class="title" href="/">台北一日遊</a>
+                <div class="nav_btn">
+                    <div class="schedule_btn" @click="clickScheduleBtn()">預定行程</div>
+                    <div class="signin_up_btn" v-text="signInUpBtn" @click.stop="clickSignInUpBtn()"></div>
+                </div>
+            </div>        
+        </nav>
+        <div class="signInSignUp">
+            <div class="signIn" v-if="signInShow">
+                <!-- <div class="attraction_img" :style="`background-image: url('${attraction.images[0]}')`"></div> -->
+                <div class="docoratorBar"></div>
+                <form id="signIn" method="put" @submit.prevent="signIn()">
+                <!-- 我原本預想加上method不要讓網址出現querystring，這裡加上沒問題 -->
+                    <div class="sign_title">
+                        登入會員帳號<img src="/static/images/icon_close.png" alt="close" class="close_sign" @click="clickCloseBtn()">
+                    </div>
+                    <div class="form_content">
+                        <input type="email" placeholder="輸入電子信箱" name="email" v-model="signInEmail" required><br>
+                        <input type="password" placeholder="輸入密碼" name="password" v-model="signInPassword" required><br>
+                        <button type="submit">登入帳戶</button>
+                    </div>  
+                </form>
+                <div class="message">
+                    <div id="message" v-text="signInMessage"></div>
+                    <div>還沒有帳戶？<span id="to_signup" @click="click_to_signUp()">點此註冊</span></div>
+                </div>
+            </div>
+            <div class="signUp" v-if="signUpShow">
+                <div class="docoratorBar"></div>
+                <!-- <form id = "signUp" method="post"> 
+                    為什麼這樣寫會有問題？ 我在js中註冊有加上e.preventDefault() -->
+                <form id = "signUp" method="post" @submit.prevent="signUp()"> <!-- form才有submit事件 -->
+                    <div class="sign_title">
+                        註冊會員帳號<img src="/static/images/icon_close.png" alt="close" class="close_sign" @click="clickCloseBtn()">
+                    </div>
+                    <div class="form_content">
+                        <input type="text" placeholder="輸入姓名" name="name" v-model="signUpName" required><br>
+                        <input type="email" placeholder="輸入電子信箱" name="email" v-model="signUpEmail" required><br>
+                        <input type="password" placeholder="輸入密碼" name="password" v-model="signUpPassword" required><br>
+                        <!-- <button type="submit" @click.prevent="signUp()">註冊新帳戶</button> -->
+                        <button type="submit">註冊新帳戶</button>
+                    </div>  
+                </form>
+                <div class="message">
+                    <div id="message" v-text="signUpMessage"></div>
+                    <div>已經有帳戶了？<span id="to_signin" @click="click_to_signIn()">點此登入</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="app">
+        <header>
+            <div class="slogan_area" >
+                <h1 class="slogan">輕鬆享受台北一日遊</h1>
+                <div class="sub-slogan">探索每個角落，體驗城市的深度旅遊行程</div>
+                <form>
+                    <input class="inputKw" type="text" name="keyword" placeholder="輸入景點名稱查詢"
+                        list="datalist" @click.stop="showCategory()" :value="userInput">
+                    <button type="submit" @click.prevent="fetchSearch()"></button> 
+                    <!-- 沒有呼叫到api，看起來prevent也沒有work，畫面重新跳轉 -->
+                </form>
+                <div class="category_block" v-if="categoryBool">
+                    <div class="category_list" id="category_list">
+                        <!-- v for應該會將該區塊重複建立 這個概念類似for迴圈-->
+                        <div class="category_name" v-for="category in category_list" v-text="category" @click="clickCategory(category)"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main >
+            <div class="attractions">
+                <a v-for="attraction in attractions" class="attraction" :href="'/attraction/' + attraction.id">
+                    <div class="attraction_img" :style="`background-image: url('${attraction.images[0]}')`">
+                        <div class="attraction_name" v-text="attraction.name"></div>    
+                    </div>
+                    <div class="info">
+                        <div class="mrt" v-text="attraction.mrt"></div>
+                        <div class="category" v-text="attraction.category"></div>
+                    </div>
+                </a>
+            </div>
+            <!-- <div class="attractions" >
+                <div class="attraction" onclick="location.href='/attraction/id'">
+                    <div class="attraction_img">
+                        <div class="attraction_name">景點名稱</div>    
+                    </div>
+                    <div class="info">
+                        <div class="mrt">捷運站</div>
+                        <div class="category">分類名稱</div>
+                    </div>
+                </div>
+            </div> -->
+        </main>
+    </div>
+    
+    <footer>COPYRIGHT © 2021 台北一日遊</footer>
+    <!-- 要放在這裡程式才讀得到，因為是順著讀下來的 -->
+    <!-- <script src="/static/js/index.js"></script> -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script> const { createApp } = Vue </script>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sign.js') }}"></script>
+</body>
+</html>

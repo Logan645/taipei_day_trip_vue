@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h1 v-text="message"></h1>
+        <button @click="addAttraction">+</button>
+        <input type="text" v-model="userInput">
+
+        <ul>
+            <li v-for="attraction in attractions">
+                <div v-text="attraction.name"></div>
+                <button @click="removeAttraction(attraction)">-</button>
+            </li>
+        </ul>
+    </div>
+    <div id="app_test">
+        <h1 v-text="message"></h1>
+        <button @click="addAttraction">+</button>
+        <input type="text" v-model="userInput">
+
+        <ul>
+            <li v-for="attraction in attractions">
+                <div v-text="attraction.name"></div>
+                <button @click="removeAttraction(attraction)">-</button>
+            </li>
+        </ul>
+    </div>
+
+    <div id="app2">
+        <h1 v-text="message">fawefaefaw</h1>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp } = Vue //從Vue中提取createApp這方法
+        const app = createApp({ //固定寫法
+            data() { 
+                return {
+                    userInput: '',
+                    message: 'Hello Vuedsafsaf',
+                    attractions: [
+                        {
+                            id: 1,
+                            name: 'Taipei'
+                        },
+                        {
+                            id: 2,
+                            name: 'Tainan'
+                        },
+                        {
+                            id: 3,
+                            name: 'Taichung'
+                        }
+                    ]
+                }
+            },
+            methods: {
+                addAttraction() {
+                    this.attractions.push({
+                        id: new Date(),
+                        name: this.userInput
+                    })
+                },
+                removeAttraction(attraction) {
+                    const index = this.attractions.findIndex(a => attraction.id === a.id)
+                    this.attractions.splice(index, 1)
+                }
+            }
+        })
+        app.mount('#app, #app_test') //選擇mount到哪
+        // app.mount('#app_test') //選擇mount到哪
+    </script>
+</body>
+</html>

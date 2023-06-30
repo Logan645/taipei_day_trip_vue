@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nav_footer.css') }}">
+    <title>感謝頁</title>
+</head>
+<body>
+    <nav>
+        <div class="nav">
+            <a class="title">台北一日遊</a> 
+            <div class="nav_btn">
+                <div class="schedule_btn">預定行程</div>
+                <div class="signin_up_btn">登入/註冊</div>
+            </div>
+        </div>        
+    </nav>
+    <div class="signInSignUp">
+        <div class="signIn">
+            <div class="docoratorBar"></div>
+            <form action="" method="put">
+                <div class="sign_title">
+                    登入會員帳號<img src="static/images/icon_close.png" alt="close" class="close_sign">
+                </div>
+                <div class="form_content">
+                    <input type="email" placeholder="輸入電子信箱" name="email" required><br>
+                    <input type="password" placeholder="輸入密碼" name="password" required><br>
+                    <button type="submit">登入帳戶</button>
+                </div>  
+            </form>
+            <div class="message">
+                <div class="error_message">帳號或密碼錯誤</div>
+                <div>還沒有帳戶？<span id="to_signup">點此註冊</span></div>
+            </div>
+        </div>
+        <div class="signUp">
+            <div class="docoratorBar"></div>
+            <form action="" method="post">
+                <div class="sign_title">
+                    登入會員帳號<img src="static/images/icon_close.png" alt="close" class="close_sign">
+                </div>
+                <div class="form_content">
+                    <input type="text" placeholder="輸入姓名" name="name" required><br>
+                    <input type="email" placeholder="輸入電子信箱" name="email" required><br>
+                    <input type="password" placeholder="輸入密碼" name="password" required><br>
+                    <button type="submit">註冊新帳戶</button>
+                </div>  
+            </form>
+            <div class="message">
+                <div class="error_message">電子郵件已被註冊</div>
+                <div>已經有帳戶了？<span id="to_signin">點此登入</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>COPYRIGHT © 2021 台北一日遊</footer>
+    <!-- 要放在這裡程式才讀得到，因為是順著讀下來的 -->
+    <!-- <script src="/static/js/index.js"></script> -->
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/sign.js') }}"></script>
+</body>
+</html>

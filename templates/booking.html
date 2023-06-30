@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂購導覽行程</title>
+    <!-- <link rel="stylesheet" type="text/css" href="/static/css/nav_footer.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/booking.css"> -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/nav_footer.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/booking.css') }}">
+</head>
+<body>
+    <div id="signInSignUp">
+        <nav>
+            <div class="nav">
+                <a class="title" href="/">台北一日遊</a>
+                <div class="nav_btn">
+                    <div class="schedule_btn" @click="clickScheduleBtn()">預定行程</div>
+                    <div class="signin_up_btn" v-text="signInUpBtn" @click.stop="clickSignInUpBtn()"></div>
+                </div>
+            </div>        
+        </nav>
+        <div class="signInSignUp">
+            <div class="signIn" v-if="signInShow">
+                <!-- <div class="attraction_img" :style="`background-image: url('${attraction.images[0]}')`"></div> -->
+                <div class="docoratorBar"></div>
+                <form id="signIn" method="put" @submit.prevent="signIn()">
+                <!-- 我原本預想加上method不要讓網址出現querystring，這裡加上沒問題 -->
+                    <div class="sign_title">
+                        登入會員帳號<img src="/static/images/icon_close.png" alt="close" class="close_sign" @click="clickCloseBtn()">
+                    </div>
+                    <div class="form_content">
+                        <input type="email" placeholder="輸入電子信箱" name="email" v-model="signInEmail" required><br>
+                        <input type="password" placeholder="輸入密碼" name="password" v-model="signInPassword" required><br>
+                        <button type="submit">登入帳戶</button>
+                    </div>  
+                </form>
+                <div class="message">
+                    <div id="message" v-text="signInMessage"></div>
+                    <div>還沒有帳戶？<span id="to_signup" @click="click_to_signUp()">點此註冊</span></div>
+                </div>
+            </div>
+            <div class="signUp" v-if="signUpShow">
+                <div class="docoratorBar"></div>
+                <!-- <form id = "signUp" method="post"> 
+                    為什麼這樣寫會有問題？ 我在js中註冊有加上e.preventDefault() -->
+                <form id = "signUp" method="post" @submit.prevent="signUp()"> <!-- form才有submit事件 -->
+                    <div class="sign_title">
+                        註冊會員帳號<img src="/static/images/icon_close.png" alt="close" class="close_sign" @click="clickCloseBtn()">
+                    </div>
+                    <div class="form_content">
+                        <input type="text" placeholder="輸入姓名" name="name" v-model="signUpName" required><br>
+                        <input type="email" placeholder="輸入電子信箱" name="email" v-model="signUpEmail" required><br>
+                        <input type="password" placeholder="輸入密碼" name="password" v-model="signUpPassword" required><br>
+                        <!-- <button type="submit" @click.prevent="signUp()">註冊新帳戶</button> -->
+                        <button type="submit">註冊新帳戶</button>
+                    </div>  
+                </form>
+                <div class="message">
+                    <div id="message" v-text="signUpMessage"></div>
+                    <div>已經有帳戶了？<span id="to_signin" @click="click_to_signIn()">點此登入</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="separator_nav"></div>
+    <main>
+        <div class="headline_block">
+            <div class="headline">您好，<span id="userName" v-text="userName"></span>，待預定的行程如下：</div>
+            <div class="nullMessage" v-text="nullMessage" v-if="nullMessageShow"></div>
+        </div>
+        <div class="content" v-if="contentShow">
+            <section>
+                <div class="attraction_img" :style="`background-image: url('${cartData['image']}')`"></div>
+                <div class="infor">
+                    <div>台北一日遊：<span id="name" v-text="cartData['attractionName']">景點名稱</span></div>
+                    日期：<span id="date" v-text="cartData['date']"></span><br>
+                    時間：<span id="time" v-text="cartData['time']"></span><br>
+                    費用：<span id="currency">新台幣<span id="price" v-text="cartData['price']"></span>元</span><br>
+                    地點：<span id="address" v-text="cartData['address']"></span><br>
+                </div>
+                <div class="delete_block">
+                    <img src="/static/images/icon_delete.png" alt="delete" id="delete_icon" @click="deleteCartData()">
+                </div>
+                    
+            </section>
+            <div class="separator_main"></div>
+            <div class="contact_form">
+                <div class="contact_form_title">你的聯絡資訊</div>
+                聯絡姓名：<input type="text" name="name" required><br>
+                聯絡信箱：<input type="email" name="email" required><br>
+                手機號碼：<input type="tel" name="phonenumber" required><br>
+                <div id="notice">請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。</div>
+            </div>
+            <div class="separator_main"></div>
+            <div class="payment">
+                <div class="payment_title">信用卡付款資訊資訊</div>
+                卡片號碼：<input type="password" name="credit_card" placeholder="**** **** **** ****" required><br>
+                過期時間：<input type="datetime" name="valid_date" placeholder="MM/YY" required><br>
+                驗證密碼：<input type="text" name="CVV" placeholder="CVV" required><br>
+            </div>
+            <div class="separator_main"></div>
+            <div class="confirm">
+                <div>總價：新台幣 <span id="total_price" v-text="cartData['price']"></span></div>
+                <button type="submit">確認訂購並付款</button>
+            </div>
+        </div>
+        
+    </main>
+    <footer>COPYRIGHT © 2021 台北一日遊</footer>
+</body>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>const { createApp } = Vue</script>
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+<script src="{{ url_for('static', filename='js/sign.js') }}"></script>
+</html>
